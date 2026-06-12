@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CVA Teacher Resources Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Montserrat:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    /* ── Reset CMS interference inside our page-wrap ── */
+    .page-wrap,
+    .page-wrap * { box-sizing: border-box; }
+    .page-wrap h1, .page-wrap h2, .page-wrap h3,
+    .page-wrap h4, .page-wrap h5 { color: inherit; }
+    .page-wrap a { color: inherit; text-decoration: none !important; }
+    .page-wrap a:hover { color: inherit; }
+    .page-wrap strong { color: inherit; }
+
+    /* ── LAYOUT ── */
+    .page-wrap {
+      max-width: 1100px; margin: 0 auto; display: flex;
+      flex-direction: column; gap: 14px;
+      font-family: 'Montserrat', Arial, sans-serif; color: #222;
+    }
+
+    /* ── HERO ── */
+    .page-wrap .hero-card {
+      background: #f4f4f4; border-radius: 16px;
+      border-left: 6px solid #bb0000; padding: 28px 26px;
+    }
+    .page-wrap .eyebrow,
+    .page-wrap .overview-label,
+    .page-wrap .quick-guide-label {
+      font-size: 12px; letter-spacing: .13em; text-transform: uppercase;
+      color: #bb0000 !important; font-weight: 800; margin-bottom: 10px; display: block;
+    }
+    .page-wrap .hero-card h1 {
+      font-family: 'Oswald', Arial, sans-serif;
+      font-size: clamp(28px, 5vw, 48px); line-height: 1.0;
+      color: #000 !important; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .page-wrap .hero-card > p:not(.eyebrow) {
+      font-size: 16px; line-height: 1.7; color: #333;
+    }
+
+    /* ── UPCOMING EVENTS WIDGET ── */
+    .page-wrap .events-card {
+      background: #fff; border: 1px solid #d9dde3;
+      border-radius: 16px; padding: 22px 24px;
+    }
+    .page-wrap .ev-header {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 3px solid #bb0000; padding-bottom: 10px; margin-bottom: 0;
+    }
+    .page-wrap .ev-header h2 {
+      font-family: 'Oswald', Arial, sans-serif; font-size: 20px; font-weight: 600;
+      color: #bb0000 !important; letter-spacing: 0.5px; text-transform: uppercase; margin: 0;
+    }
+    .page-wrap .ev-header-links { display: flex; gap: 8px; }
+    .page-wrap .ev-header-links a {
+      font-size: 11px; font-weight: 600; color: #bb0000 !important;
+      border: 1px solid #bb0000; padding: 4px 10px;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      transition: background 0.15s, color 0.15s;
+    }
+    .page-wrap .ev-header-links a:hover { background: #bb0000; color: #fff !important; }
+
+    /* Upload zone */
+    .page-wrap #ev-uploadSection { margin-top: 14px; }
+    .page-wrap .ev-upload-zone {
+      border: 2px dashed #C8C7C7; padding: 28px 20px; text-align: center;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s; border-radius: 8px;
+    }
+    .page-wrap .ev-upload-zone:hover,
+    .page-wrap .ev-upload-zone.ev-drag { border-color: #bb0000; background: #fff5f5; }
+    .page-wrap .ev-upload-zone input[type="file"] { display: none; }
+    .page-wrap .ev-upload-zone strong {
+      display: block; font-family: 'Oswald', Arial, sans-serif;
+      font-size: 14px; font-weight: 600; color: #bb0000 !important;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;
+    }
+    .page-wrap .ev-upload-zone p { font-size: 13px; color: #555; margin-bottom: 10px; }
+    .page-wrap .ev-template-btn {
+      font-size: 11px; font-weight: 600; color: #bb0000 !important;
+      text-decoration: underline !important; cursor: pointer;
+      background: none; border: none; font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .page-wrap .ev-template-btn:hover { color: #991a1e !important; }
+
+    /* Col reference */
+    .page-wrap .ev-col-ref {
+      background: #f7f7f7; border-left: 4px solid #bb0000;
+      padding: 10px 14px; font-size: 12px; color: #444; margin-top: 12px;
+    }
+    .page-wrap .ev-col-ref b {
+      display: block; color: #bb0000 !important; font-family: 'Oswald', Arial, sans-serif;
+      text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    .page-wrap .ev-col-ref table { width: 100%; border-collapse: collapse; }
+    .page-wrap .ev-col-ref td { padding: 2px 8px 2px 0; vertical-align: top; line-height: 1.5; }
+    .page-wrap .ev-col-ref td:first-child { font-weight: 600; white-space: nowrap; width: 90px; color: #222; }
+    .page-wrap .ev-col-ref td:last-child { color: #666; }
+
+    /* Event list */
+    .page-wrap #ev-eventSection { display: none; }
+    .page-wrap .ev-count-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; color: #888; padding: 8px 0 4px;
+      border-bottom: 0.5px solid #C8C7C7;
+    }
+    .page-wrap .ev-reload-btn {
+      font-size: 11px; color: #bb0000 !important; text-decoration: underline !important;
+      cursor: pointer; background: none; border: none;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .page-wrap .ev-reload-btn:hover { color: #991a1e !important; }
+
+    .page-wrap .ev-row {
+      display: flex; align-items: stretch;
+      border-bottom: 0.5px solid #C8C7C7; cursor: pointer;
+    }
+    .page-wrap .ev-row:hover .ev-body { background: #fafafa; }
+    .page-wrap .ev-row:focus { outline: 2px solid #bb0000; outline-offset: -2px; }
+
+    .page-wrap .ev-badge {
+      background: #bb0000; color: #fff;
+      min-width: 62px; width: 62px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 12px 8px; font-family: 'Oswald', Arial, sans-serif; flex-shrink: 0;
+    }
+    .page-wrap .ev-badge .ev-month {
+      font-size: 11px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .page-wrap .ev-badge .ev-day { font-size: 26px; font-weight: 600; line-height: 1; }
+
+    .page-wrap .ev-body { flex: 1; padding: 12px 14px; transition: background 0.1s; }
+    .page-wrap .ev-title {
+      font-family: 'Oswald', Arial, sans-serif; font-size: 14px; font-weight: 600;
+      color: #222 !important; margin-bottom: 3px;
+    }
+    .page-wrap .ev-time { font-size: 12px; color: #666; margin-bottom: 3px; }
+    .page-wrap .ev-cat {
+      font-size: 11px; color: #bb0000 !important; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.3px;
+    }
+
+    .page-wrap .ev-arrow {
+      display: flex; align-items: center; padding: 0 12px 0 4px;
+      color: #bb0000; flex-shrink: 0; transition: transform 0.2s;
+    }
+    .page-wrap .ev-arrow.open { transform: rotate(90deg); }
+
+    .page-wrap .ev-detail {
+      background: #f5f5f5; border-left: 4px solid #bb0000;
+      padding: 10px 14px 10px 18px; font-size: 13px; color: #333 !important;
+      display: none; line-height: 1.6;
+    }
+    .page-wrap .ev-detail.open { display: block; }
+    .page-wrap .ev-detail p { margin-bottom: 8px; color: #333 !important; }
+    .page-wrap .ev-cal-link {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      color: #bb0000 !important; border: 1px solid #bb0000;
+      padding: 4px 12px; margin-top: 4px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .page-wrap .ev-cal-link:hover { background: #bb0000; color: #fff !important; }
+
+    .page-wrap .ev-status {
+      font-size: 13px; color: #555; padding: 12px 0; text-align: center;
+    }
+    .page-wrap .ev-status.err { color: #bb0000 !important; font-weight: 500; }
+
+    .page-wrap .ev-footer-links { display: flex; gap: 12px; padding: 12px 0 2px; }
+    .page-wrap .ev-footer-links a {
+      font-size: 11px; font-weight: 600; color: #bb0000 !important;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 1px solid #bb0000 !important; padding-bottom: 1px;
+    }
+    .page-wrap .ev-footer-links a:hover { opacity: 0.75; }
+
+    .page-wrap .ev-chevron { width: 15px; height: 15px; display: block; }
+    .page-wrap .ev-upload-icon { display: block; margin: 0 auto 10px; }
+
+    /* ── OVERVIEW ── */
+    .page-wrap .overview-card {
+      background: #f5f5f5; border: 1px solid #d9dde3; border-radius: 16px; padding: 26px 28px;
+    }
+    .page-wrap .overview-card h2 {
+      font-family: 'Oswald', Arial, sans-serif;
+      font-size: clamp(28px, 4vw, 34px); line-height: 1.15;
+      color: #222 !important; text-transform: uppercase; font-weight: 900; margin-bottom: 12px;
+    }
+    .page-wrap .overview-card > p:not(.overview-label) {
+      font-size: 16px; line-height: 1.7; color: #333; margin-bottom: 20px;
+    }
+    .page-wrap .overview-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;
+    }
+    .page-wrap details.overview-reveal { border-radius: 12px; overflow: hidden; }
+    .page-wrap details.overview-reveal > summary {
+      background: #fff; border: 2px solid #d9dde3; border-left: 6px solid #bb0000;
+      border-radius: 12px; padding: 18px; cursor: pointer; list-style: none;
+      display: flex; flex-direction: column; justify-content: center; min-height: 90px;
+    }
+    .page-wrap details.overview-reveal > summary::-webkit-details-marker { display: none; }
+    .page-wrap details.overview-reveal[open] > summary {
+      border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+    }
+    .page-wrap .overview-reveal-title {
+      font-size: 15px; font-weight: 800; color: #222 !important; display: block; margin-bottom: 4px;
+    }
+    .page-wrap .overview-reveal-sub { font-size: 12px; color: #999 !important; font-style: italic; }
+    .page-wrap .overview-reveal-body {
+      background: #bb0000; border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px; padding: 16px 18px;
+    }
+    .page-wrap .overview-reveal-body p {
+      font-size: 16px; line-height: 1.65; color: #fff !important; margin: 0;
+    }
+
+    /* ── QUICK REFERENCE ── */
+    .page-wrap .quick-guide-card {
+      background: #f4f4f4; border: 1px solid #d9dde3; border-radius: 16px; padding: 28px 26px;
+    }
+    .page-wrap .quick-guide-card h2 {
+      font-family: 'Oswald', Arial, sans-serif;
+      font-size: clamp(25px, 4vw, 36px); font-weight: 700; text-transform: uppercase;
+      color: #000 !important; line-height: 1.05; margin-bottom: 10px;
+    }
+    .page-wrap .quick-guide-intro {
+      font-size: 16px; line-height: 1.7; color: #333; margin-bottom: 18px;
+    }
+
+    /* ── SEARCH ── */
+    .page-wrap .search-label {
+      font-size: 12px; letter-spacing: .13em; text-transform: uppercase;
+      color: #bb0000 !important; font-weight: 800; margin-bottom: 8px; display: block;
+    }
+    .page-wrap .search-container { width: 100%; margin-bottom: 8px; }
+    .page-wrap .search-wrap {
+      display: flex; align-items: center; gap: 8px; background: #fff;
+      border: 1px solid #cfd4da; border-radius: 6px; padding: 0 12px;
+      height: 42px; width: 100%; max-width: 100%;
+    }
+    .page-wrap .search-wrap:focus-within {
+      border-color: #bb0000; box-shadow: 0 0 0 2px rgba(187,0,0,0.1);
+    }
+    .page-wrap .search-wrap .ti-search { color: #bb0000 !important; font-size: 17px; }
+    .page-wrap .search-wrap .cva-search-input {
+      border: none; outline: none; font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 14px; color: #222; flex: 1; background: transparent; min-width: 0; cursor: text;
+    }
+    .page-wrap .search-wrap .cva-search-input:empty::before {
+      content: attr(data-placeholder); color: #999; pointer-events: none;
+    }
+    .page-wrap .search-wrap .cva-search-input:focus { outline: none; }
+    .page-wrap .search-clear {
+      background: #f0f0f0; border: none; cursor: pointer; color: #777 !important;
+      font-size: 14px; font-family: 'Montserrat', Arial, sans-serif; font-weight: 700;
+      padding: 3px 8px; border-radius: 4px; line-height: 1.5;
+      display: none; white-space: nowrap; user-select: none;
+    }
+    .page-wrap .search-clear:hover { color: #bb0000 !important; background: #fce8e8; }
+
+    /* ── INLINE RESULTS ── */
+    .page-wrap .search-results { width: 100%; margin-bottom: 20px; display: none; }
+    .page-wrap .search-results.visible { display: block; }
+    .page-wrap .results-list {
+      background: #fff; border: 1px solid #d9dde3; border-radius: 10px; overflow: hidden;
+    }
+    .page-wrap .result-item {
+      display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+      cursor: pointer; border-bottom: 1px solid #f0f0f0;
+    }
+    .page-wrap .result-item:last-of-type { border-bottom: none; }
+    .page-wrap .result-item:hover { background: #fdf5f5; }
+    .page-wrap .result-icon {
+      width: 32px; height: 32px; border-radius: 8px; background: #fce8e8;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .page-wrap .result-icon i { font-size: 15px; color: #bb0000 !important; }
+    .page-wrap .result-title { font-size: 14px; font-weight: 800; color: #111 !important; }
+    .page-wrap .result-section { font-size: 12px; color: #999 !important; margin-top: 1px; }
+    .page-wrap .results-empty { padding: 16px; font-size: 14px; color: #999; text-align: center; }
+    .page-wrap .results-hint {
+      padding: 7px 14px; font-size: 12px; color: #aaa;
+      background: #fafafa; border-top: 1px solid #f0f0f0; text-align: right;
+    }
+
+    /* ── SCROLL HIGHLIGHT ── */
+    .page-wrap .card-highlight {
+      border: 2px solid #bb0000 !important; animation: cva-pulse 1s ease-out infinite;
+    }
+    @keyframes cva-pulse {
+      0%   { box-shadow: 0 0 0 0   rgba(187,0,0,0.5); }
+      60%  { box-shadow: 0 0 0 10px rgba(187,0,0,0);   }
+      100% { box-shadow: 0 0 0 0   rgba(187,0,0,0);    }
+    }
+
+    /* ── ACCORDION ROWS ── */
+    .page-wrap details.quick-ref {
+      display: block !important; border-radius: 6px; margin-bottom: 10px;
+      overflow: hidden; background: #1e1e1e;
+    }
+    .page-wrap details.quick-ref > summary {
+      list-style: none; cursor: pointer; background: #1e1e1e; color: #fff !important;
+      padding: 15px 18px; font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 14px; font-weight: 800;
+      display: flex; align-items: center; gap: 10px; user-select: none;
+    }
+    .page-wrap details.quick-ref > summary::-webkit-details-marker { display: none; }
+    .page-wrap details.quick-ref > summary:hover { background: #2c2c2c; }
+    .page-wrap details.quick-ref > summary .quick-plus {
+      color: #fff !important; font-size: 16px; font-weight: 800;
+      line-height: 1; transition: transform .2s;
+    }
+    .page-wrap details.quick-ref[open] > summary .quick-plus { transform: rotate(45deg); }
+    .page-wrap .quick-ref-body {
+      background: #fff; border: 1px solid #d9dde3; border-top: none;
+      padding: 20px 18px; font-size: 16px; line-height: 1.7; color: #333;
+    }
+    .page-wrap .quick-ref-body > p { margin-bottom: 12px; }
+    .page-wrap .placeholder-box {
+      background: #fff; border: 1px solid #e0e0e0;
+      border-left: 5px solid #bb0000; border-radius: 0 10px 10px 0;
+      padding: 14px 16px; margin-top: 12px; font-size: 16px; line-height: 1.7; color: #333;
+    }
+    .page-wrap .placeholder-box strong { color: #bb0000 !important; }
+
+    /* ── CARD GRID ── */
+    .page-wrap .card-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+    }
+    @media (max-width: 600px) {
+      .page-wrap .card-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── INFO CARDS ── */
+    .page-wrap .info-card {
+      background: #fff; border: 1px solid #d9dde3; border-radius: 16px;
+      padding: 22px; border-top: 6px solid #bb0000; display: flex; flex-direction: column;
+    }
+    .page-wrap .info-card-label {
+      font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+      color: #bb0000 !important; font-weight: 800; margin-bottom: 8px;
+    }
+    .page-wrap .info-card h3 {
+      font-size: 22px; line-height: 1.2; color: #000 !important; font-weight: 900; margin-bottom: 10px;
+    }
+    .page-wrap .info-card > p {
+      font-size: 16px; line-height: 1.6; color: #222 !important; margin-bottom: 14px; flex: 1;
+    }
+    .page-wrap .info-card-tags {
+      background: #f7f8fa; border: 1px solid #d9dde3; border-radius: 12px;
+      padding: 10px 12px; font-size: 14px; line-height: 1.5; color: #444 !important; margin-bottom: 16px;
+    }
+    .page-wrap .info-card-tags strong { color: #bb0000 !important; }
+    .page-wrap .btn-red {
+      display: inline-block; text-decoration: none !important;
+      background: #bb0000; color: #fff !important;
+      border-radius: 999px; padding: 10px 16px; font-size: 14px; font-weight: 800;
+    }
+    .page-wrap .btn-red:hover { background: #990000; color: #fff !important; }
+
+    /* ── ACCORDION SECTION ── */
+    .page-wrap .accordion-section { display: flex; flex-direction: column; gap: 0; }
+    .page-wrap .accordion-section details.quick-ref {
+      display: block !important; visibility: visible !important;
+    }
+
+    /* ── FOOTER ── */
+    .page-wrap .cva-footer {
+      border-top: 1px solid #d9dde3; margin-top: 14px; padding-top: 14px; text-align: center;
+    }
+    .page-wrap .cva-footer p {
+      font-family: 'Oswald', Arial, sans-serif; font-size: 22px; color: #63666a;
+      font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin: 0;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .page-wrap .hero-card,
+      .page-wrap .overview-card,
+      .page-wrap .quick-guide-card { padding: 20px 18px; }
+      .page-wrap .quick-guide-card h2,
+      .page-wrap .overview-card h2 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <div class="hero-card">
+    <p class="eyebrow">Teacher Support</p>
+    <h1>CVA Teacher Resources Hub</h1>
+    <p>Quick answers and resources for CVA teaching expectations, communication, feedback, student support, and professional collaboration.</p>
+  </div>
+
+  <!-- UPCOMING EVENTS WIDGET -->
+  <div class="events-card" role="region" aria-label="Upcoming Events">
+
+    <div class="ev-header">
+      <h2>Upcoming Events</h2>
+      <div class="ev-header-links">
+        <a href="#" id="ev-listViewLink">List View</a>
+        <a href="#" id="ev-calViewLink">View Calendar</a>
+      </div>
+    </div>
+
+    <!-- Upload Section -->
+    <div id="ev-uploadSection">
+      <div class="ev-upload-zone" id="ev-dropZone"
+           role="button" tabindex="0" aria-label="Upload Excel events file"
+           onclick="document.getElementById('ev-fileInput').click()"
+           ondragover="evDragOver(event)"
+           ondragleave="evDragLeave(event)"
+           ondrop="evDrop(event)"
+           onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('ev-fileInput').click()">
+        <input type="file" id="ev-fileInput" accept=".xlsx,.xls" onchange="evLoadFile(this.files[0])">
+        <svg class="ev-upload-icon" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#BB0000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M12 21h-7a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v8"/>
+          <path d="M3 10h18"/><path d="M10 3v18"/><path d="M19 16v6"/><path d="M22 19l-3 3l-3 -3"/>
+        </svg>
+        <strong>Upload your Events Spreadsheet</strong>
+        <p>Click to browse or drag &amp; drop an Excel file (.xlsx)</p>
+        <button class="ev-template-btn" onclick="evDownloadTemplate(event)" aria-label="Download blank Excel template">
+          &#8595; Download blank template
+        </button>
+      </div>
+
+      <div class="ev-col-ref" role="note">
+        <b>Required column headers — row 1 of your spreadsheet</b>
+        <table>
+          <tbody>
+            <tr><td>Month</td><td>3-letter abbreviation, e.g. <em>JUN, AUG, SEP</em></td></tr>
+            <tr><td>Day</td><td>Number, e.g. <em>15</em></td></tr>
+            <tr><td>Title</td><td>Event name</td></tr>
+            <tr><td>Time</td><td><em>All Day</em> or a range like <em>9:00am – 3:00pm</em></td></tr>
+            <tr><td>Category</td><td>Optional label shown below the title</td></tr>
+            <tr><td>Details</td><td>Optional description shown when expanded</td></tr>
+            <tr><td>ICS Link</td><td>Optional .ics URL for "Add to my calendar"</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Event List Section -->
+    <div id="ev-eventSection">
+      <div class="ev-count-bar">
+        <button class="ev-reload-btn" onclick="evResetView()" aria-label="Upload a new file">
+          &#8635; Upload new file
+        </button>
+        <span id="ev-countLabel"></span>
+      </div>
+      <div id="ev-eventList" role="list"></div>
+      <div class="ev-footer-links">
+        <a href="#" id="ev-viewAllLink">View All Events</a>
+        <a href="#" id="ev-viewCalLink">View Calendar</a>
+      </div>
+    </div>
+
+    <!-- Status Messages -->
+    <div id="ev-statusMsg" role="alert" aria-live="polite"></div>
+
+  </div>
+  <!-- /UPCOMING EVENTS WIDGET -->
+
+  <!-- OVERVIEW -->
+  <div class="overview-card">
+    <p class="overview-label">Overview</p>
+    <h2>CVA Teacher Expectations</h2>
+    <p>Use this guide to review the core areas of effective online teaching at CVA. Click a card below to learn more about each expectation area.</p>
+    <div class="overview-grid">
+      <details class="overview-reveal">
+        <summary>&nbsp;<span class="overview-reveal-title">Grading and Feedback</span> <span class="overview-reveal-sub">Click to learn more</span>&nbsp;</summary>
+        <div class="overview-reveal-body">
+          <p>Grading and Feedback are the expectations that a teacher regularly grades student work and provides timely, meaningful feedback aligned to course standards. Consistent feedback helps students understand their progress and next steps in an asynchronous learning environment.</p>
+        </div>
+      </details>
+      <details class="overview-reveal">
+        <summary>&nbsp;<span class="overview-reveal-title">Communication and Responsiveness</span> <span class="overview-reveal-sub">Click to learn more</span>&nbsp;</summary>
+        <div class="overview-reveal-body">
+          <p>Communication and Responsiveness is the expectation that a teacher communicates clearly and consistently so students and families understand expectations and feel supported. The CVA online teacher uses appropriate communication tools and responds within established timeframes to promote engagement and reduce barriers to learning.</p>
+        </div>
+      </details>
+      <details class="overview-reveal">
+        <summary>&nbsp;<span class="overview-reveal-title">Rapport and Relationships</span> <span class="overview-reveal-sub">Click to learn more</span>&nbsp;</summary>
+        <div class="overview-reveal-body">
+          <p>Rapport &amp; Relationships is the expectation that a teacher intentionally builds positive connections with students to foster engagement and belonging. The CVA online teacher uses personalized communication and encouragement so students feel known and supported.</p>
+        </div>
+      </details>
+      <details class="overview-reveal">
+        <summary>&nbsp;<span class="overview-reveal-title">Proactive Intervention and Student Support</span> <span class="overview-reveal-sub">Click to learn more</span>&nbsp;</summary>
+        <div class="overview-reveal-body">
+          <p>Proactive Intervention and Student Support is the expectation that a teacher monitors student progress and takes timely action when concerns arise. Early outreach and support help prevent students from falling behind and promote academic success.</p>
+        </div>
+      </details>
+      <details class="overview-reveal">
+        <summary>&nbsp;<span class="overview-reveal-title">Professionalism and Collaboration</span> <span class="overview-reveal-sub">Click to learn more</span>&nbsp;</summary>
+        <div class="overview-reveal-body">
+          <p>Professionalism and Collaboration reflects that a teacher demonstrates professional conduct and works collaboratively to support student success. Consistent communication and teamwork contribute to a high-quality learning experience for CVA students.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- QUICK REFERENCE GUIDE -->
+  <div class="quick-guide-card" id="quick-reference-guide">
+    <p class="quick-guide-label">Quick Reference Guide</p>
+    <h2>How Do I Find What I Need?</h2>
+    <p class="quick-guide-intro">Use the sections below to learn more about each CVA teacher expectation area. Search by keyword to quickly find a specific card.</p>
+    <p class="search-label">Search Keywords</p>
+    <div class="search-container">
+      <div class="search-wrap" id="cva-search-wrap">
+        <i class="ti ti-search" aria-hidden="true"></i>
+        <div id="cva-input" class="cva-search-input" contenteditable="true" spellcheck="false" data-placeholder="e.g. grading, feedback, communication, intervention…"><br></div>
+        <span id="cva-clear" class="search-clear" tabindex="0" style="display:none;">&#10005; Clear</span>
+      </div>
+    </div>
+    <div class="search-results" id="search-results"><br></div>
+  </div>
+
+  <!-- ACCORDION SECTIONS -->
+  <div class="accordion-section">
+
+    <!-- GRADING AND FEEDBACK -->
+    <details class="quick-ref" style="display:block!important;visibility:visible!important;">
+      <summary><span class="quick-plus">+</span>Grading and Feedback</summary>
+      <div class="quick-ref-body">
+        <div class="card-grid">
+          <div class="info-card" id="card-grading-policy">
+            <p class="info-card-label">Grading Requirements</p>
+            <h3>Grading Policy at CVA</h3>
+            <p>Learn the core grading requirements that support accurate progress monitoring and meaningful student intervention.</p>
+            <div class="info-card-tags"><strong>Search:</strong> grading, feedback, 48 hours, CTLS submissions, missing coursework, student intervention, requirements, attachments, links</div>
+            <a href="cva-grading-policy.html" target="_blank" rel="noopener noreferrer" class="btn-red">Click Here to View More</a>
+          </div>
+          <div class="info-card" id="card-quick-scoring">
+            <p class="info-card-label">CTLS Gradebook Support</p>
+            <h3>Resolving In Progress Student Work</h3>
+            <p>Learn how to resolve assessments, assignments, etc. stuck in progress when students cannot re-enter to click Finish.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Quick Score, Overwrite Score, In Progress, CTLS assessment</div>
+            <a href="resolving-in-progress-work.html" target="_blank" rel="noopener noreferrer" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-resubmission">
+            <p class="info-card-label">CTLS Gradebook Support</p>
+            <h3>Resubmission Opportunities</h3>
+            <p>Learn how to grade the original attempt, allow a resubmission, mark the new attempt missing, and add a resubmission deadline.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Resubmission, Allow Resubmission, Finish Student, Missing, Feedback Deadline</div>
+            <a href="allowing-resubmissions.html" target="_blank" rel="noopener noreferrer" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-discussion">
+            <p class="info-card-label">Online Teaching Practices</p>
+            <h3>Discussion to Drive Learning</h3>
+            <p>Learn how to use discussion boards as formative learning spaces that reveal student thinking, strengthen teacher presence, and move beyond checklist-style participation.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Discussion Boards, Grading Discussions, Formative Assessment, Teacher Presence, Student Thinking</div>
+            <a href="discussions-as-learning.html" target="_blank" rel="noopener noreferrer" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-academic-integrity">
+            <p class="info-card-label">Grading Requirements</p>
+            <h3>Academic Integrity and Paused Grading</h3>
+            <p>Learn what to do when grading is paused for an Academic Integrity concern, including how to document feedback, contact the student, and keep the gradebook accurate.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Academic Integrity, Paused Grading, Temporary 0, Scoring Required, Missing Status, AI</div>
+            <a href="paused-grading.html" target="_blank" rel="noopener noreferrer" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-effective-feedback">
+            <p class="info-card-label">Online Teaching Practices</p>
+            <h3>Effective Feedback</h3>
+            <p>Learn how to provide feedback that is clear, timely, respectful, connected to learning goals, and focused on helping students improve.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Effective Feedback, Grading, Student Growth, Actionable Feedback, Learning Goals</div>
+            <a href="effective-feedback.html" target="_blank" rel="noopener noreferrer" class="btn-red">Click here to view more</a>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- COMMUNICATION AND RESPONSIVENESS -->
+    <details class="quick-ref" style="display:block!important;visibility:visible!important;">
+      <summary><span class="quick-plus">+</span>Communication and Responsiveness</summary>
+      <div class="quick-ref-body">
+        <div class="card-grid">
+          <div class="info-card" id="card-email-comm">
+            <p class="info-card-label">Email</p>
+            <h3>Email Communication</h3>
+            <p>Review professional email expectations, including response time, subject lines, message length, confidentiality, and when to choose a phone call instead.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> email communication, responsiveness, subject lines, public record, professional email, response time, tone</div>
+            <a href="email-communication.html" target="_blank" rel="noopener noreferrer" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-email-sig">
+            <p class="info-card-label">Email</p>
+            <h3>Required Email Signature</h3>
+            <p>Download the required CCSD/CVA email signature template and update it with your name, title, contact information, and approved signature format.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> email signature, CCSD signature, CVA signature, email template, communication standards</div>
+            <a href="cva-email-signature.html" target="_blank" rel="noopener noreferrer" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-student-contact">
+            <p class="info-card-label">Communication</p>
+            <h3>Who Do Students Contact?</h3>
+            <p>Help students understand who to contact for class questions, assignment help, feedback clarification, academic support, scheduling, credits, and graduation planning.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Student Contact, Teacher Support, Department Lead, School Counselor, Assignment Help, Graduation Requirements</div>
+            <a href="who-do-students-contact.html" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- RAPPORT AND RELATIONSHIPS -->
+    <details class="quick-ref" style="display:block!important;visibility:visible!important;">
+      <summary><span class="quick-plus">+</span>Rapport and Relationships</summary>
+      <div class="quick-ref-body">
+        <div class="card-grid">
+          <div class="info-card" id="card-instructor-profile">
+            <p class="info-card-label">Instructor Profile</p>
+            <h3>Instructor Profile</h3>
+            <p>Learn how to update your Instructor Profile with a professional picture, CCSD email address, virtual phone number, and office hours.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Instructor Profile, Profile Picture, Contact Information, Office Hours, Digital Classroom</div>
+            <a href="https://www.cobbk12.org/cobbvirtualacademy/instructor-profile" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-classroom-announcements">
+            <p class="info-card-label">Classroom Announcements</p>
+            <h3>Classroom Announcements</h3>
+            <p>Learn how to use the Class Board, Board Topics, and Announcements to build teacher presence, share timely updates, and keep students informed.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Class Board, Classroom Announcements, Board Topics, CVA News You Can Use, Teacher Presence</div>
+            <a href="classroom-announcements.html" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- PROACTIVE INTERVENTION -->
+    <details class="quick-ref" style="display:block!important;visibility:visible!important;">
+      <summary><span class="quick-plus">+</span>Proactive Intervention and Student Support</summary>
+      <div class="quick-ref-body">
+        <div class="card-grid">
+          <div class="info-card" id="card-parent-access">
+            <p class="info-card-label">CTLS Parent Support</p>
+            <h3>Parent Access to CTLS Learn</h3>
+            <p>Learn how parents can view their student's Digital Classroom through CTLS Parent using classroom access mode.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Parent Access, CTLS Parent, CTLS Learn, Classroom Access Mode, Digital Classroom</div>
+            <a href="parent-access-to-ctls.html" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-ctls-icons">
+            <p class="info-card-label">Navigating CTLS</p>
+            <h3>Navigating with CTLS Icons</h3>
+            <p>Learn what common CTLS icons mean, including folders, pages, booklets, discussions, assignments, assessments, and navigation arrows.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> CTLS Icons, Folder, Assignment, Assessment, Discussion Board, Navigation</div>
+            <a href="https://www.cobbk12.org/cobbvirtualacademy/navigating-ctls-icons" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-checking-grades">
+            <p class="info-card-label">Student Support</p>
+            <h3>Checking Grades</h3>
+            <p>Learn how to use My Grades in CTLS, understand gradebook icons, review teacher feedback, and check StudentVUE for your official grade.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> My Grades, StudentVUE, Synergy, Gradebook Icons, Missing Work, Feedback</div>
+            <a href="https://www.cobbk12.org/cobbvirtualacademy/checking-grades" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-checking-feedback">
+            <p class="info-card-label">Student Support</p>
+            <h3>Checking Feedback</h3>
+            <p>Learn how to find, read, and use teacher feedback in CTLS for assessments, assignments, attachments, and discussion boards.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Feedback, Instructor Feedback, My Grades, Assignments, Assessments, Attachments, Discussion Boards</div>
+            <a href="https://www.cobbk12.org/cobbvirtualacademy/checking-feedback" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-accommodations">
+            <p class="info-card-label">Student Support</p>
+            <h3>Student Accommodations and Accessibility</h3>
+            <p>Learn how CVA teachers are notified about IEP and 504 accommodations, what adjunct teachers should do, and how CTLS accessibility tools can support students.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Accommodations, IEP, 504 Plan, Accessibility Tools, Student Support, Case Manager</div>
+            <a href="accommodations-and-accessibility.html" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-progress-tracker">
+            <p class="info-card-label">Navigating CTLS</p>
+            <h3>Progress Tracker</h3>
+            <p>Learn how to use the Progress Tracker to view student course access, understand student tiles, and find more detailed performance data.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Progress Tracker, Student Tiles, Course Progress, Assignments, Assessments, Student Performance</div>
+            <a href="progress-tracker.html" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-practice-student">
+            <p class="info-card-label">Navigating CTLS</p>
+            <h3>Practice Student View</h3>
+            <p>Learn how to access Practice Student View in CTLS so you can experience your course as students do, check navigation flow, and verify access and visibility.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Practice Student, Student View, Graduation Cap, CTLS Learn Portal, My Classes, Course Tile</div>
+            <a href="practice-student.html" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-local-schools">
+            <p class="info-card-label">Teacher Communication</p>
+            <h3>Contact from Local Schools</h3>
+            <p>Learn what CVA teachers should do if they have questions about a student's local school or receive direct communication from school staff.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Local School, Teacher Support, School Contact, Forward Email, Communication Path, Student Support</div>
+            <a href="contacting-local-schools.html" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- PROFESSIONALISM -->
+    <details class="quick-ref" style="display:block!important;visibility:visible!important;">
+      <summary><span class="quick-plus">+</span>Professionalism and Collaboration</summary>
+      <div class="quick-ref-body">
+        <div class="card-grid">
+          <div class="info-card" id="card-pl-course">
+            <p class="info-card-label">Online Teaching Practices</p>
+            <h3>Professional Learning Course</h3>
+            <p>Learn how to access the CVA New Teacher Training course in CTLS, find professional learning content, and move through the onboarding course.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> Professional Learning, New Teacher Training, CTLS, Graduation Cap, My Coursework, Onboarding</div>
+            <a href="professional-learning-course.html" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+          <div class="info-card" id="card-ipr">
+            <p class="info-card-label">Online Teaching Practices</p>
+            <h3>Instructional Practice Review</h3>
+            <p>Learn how CVA uses the Instructional Practice Review to support growth, clarify instructional expectations, and strengthen asynchronous teaching practices.</p>
+            <div class="info-card-tags"><strong>Search terms:</strong> IPR, Instructional Practice Review, Teacher Growth, Instructional Expectations, Feedback, Professional Learning</div>
+            <a href="instructional-practice-review.html" target="_blank" rel="noopener" class="btn-red">Click here to view more</a>
+          </div>
+        </div>
+      </div>
+    </details>
+
+  </div><!-- /.accordion-section -->
+
+  <!-- FOOTER -->
+  <div class="cva-footer">
+    <p><strong>Class. Virtually. Anywhere.</strong></p>
+  </div>
+
+</div><!-- /.page-wrap -->
+
+<script>
+/* ════════════════════════════════════════
+   UPCOMING EVENTS — scoped to ev- prefix
+   ════════════════════════════════════════ */
+(function() {
+  var evEvents = [];
+  var evOpenIdx = -1;
+  var EV_MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+  function evDragOver(e) {
+    e.preventDefault();
+    document.getElementById('ev-dropZone').classList.add('ev-drag');
+  }
+  function evDragLeave(e) {
+    document.getElementById('ev-dropZone').classList.remove('ev-drag');
+  }
+  function evDrop(e) {
+    e.preventDefault();
+    document.getElementById('ev-dropZone').classList.remove('ev-drag');
+    var file = e.dataTransfer.files[0];
+    if (file) evLoadFile(file);
+  }
+
+  function evLoadFile(file) {
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        var wb = XLSX.read(e.target.result, { type: 'array' });
+        var ws = wb.Sheets[wb.SheetNames[0]];
+        var rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+        if (!rows.length) { evSetStatus('The spreadsheet appears to be empty.', true); return; }
+        var keys = Object.keys(rows[0]).map(function(k) { return k.toLowerCase().trim(); });
+        if (keys.indexOf('month') === -1 || keys.indexOf('day') === -1 || keys.indexOf('title') === -1) {
+          evSetStatus('Could not find required columns: Month, Day, Title. Check row 1 matches the template.', true);
+          return;
+        }
+        function getCol(row, col) {
+          var key = Object.keys(row).find(function(k) { return k.toLowerCase().trim() === col; });
+          return String(row[key] || '').trim();
+        }
+        evEvents = rows.map(function(r) {
+          return {
+            month: getCol(r, 'month').toUpperCase().slice(0, 3),
+            day: parseInt(getCol(r, 'day')) || 0,
+            title: getCol(r, 'title'),
+            time: getCol(r, 'time') || 'All Day',
+            cat: getCol(r, 'category'),
+            detail: getCol(r, 'details'),
+            ics: getCol(r, 'ics link')
+          };
+        }).filter(function(ev) { return ev.month && ev.day && ev.title; });
+        evEvents.sort(function(a, b) {
+          return (EV_MONTHS.indexOf(a.month) * 31 + a.day) - (EV_MONTHS.indexOf(b.month) * 31 + b.day);
+        });
+        evOpenIdx = -1;
+        evSetStatus('');
+        document.getElementById('ev-uploadSection').style.display = 'none';
+        document.getElementById('ev-eventSection').style.display = 'block';
+        document.getElementById('ev-countLabel').textContent =
+          evEvents.length + ' event' + (evEvents.length !== 1 ? 's' : '') + ' loaded';
+        evRender();
+      } catch(err) {
+        evSetStatus('Could not read the file. Please make sure it is a valid .xlsx file.', true);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function evEsc(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function evRender() {
+    var list = document.getElementById('ev-eventList');
+    if (!evEvents.length) {
+      list.innerHTML = '<div class="ev-status">No events found in this file.</div>';
+      return;
+    }
+    list.innerHTML = evEvents.map(function(ev, i) {
+      var isOpen = evOpenIdx === i;
+      var detailHtml = ev.detail
+        ? '<p>' + ev.detail.replace(/\n/g, '<br>') + '</p>'
+        : '<p><em>No additional details provided.</em></p>';
+      var icsHtml = ev.ics
+        ? '<a class="ev-cal-link" href="' + evEsc(ev.ics) + '" target="_blank" rel="noopener">&#128197; Add to my calendar</a>'
+        : '';
+      return (
+        '<div role="listitem">' +
+          '<div class="ev-row" onclick="evToggle(' + i + ')" role="button" tabindex="0"' +
+               ' aria-expanded="' + isOpen + '"' +
+               ' onkeydown="if(event.key===\'Enter\'||event.key===\' \')evToggle(' + i + ')">' +
+            '<div class="ev-badge" aria-hidden="true">' +
+              '<span class="ev-month">' + evEsc(ev.month) + '</span>' +
+              '<span class="ev-day">' + ev.day + '</span>' +
+            '</div>' +
+            '<div class="ev-body">' +
+              '<div class="ev-title">' + evEsc(ev.title) + '</div>' +
+              '<div class="ev-time">' + evEsc(ev.time) + '</div>' +
+              (ev.cat ? '<div class="ev-cat">' + evEsc(ev.cat) + '</div>' : '') +
+            '</div>' +
+            '<div class="ev-arrow' + (isOpen ? ' open' : '') + '" aria-hidden="true">' +
+              '<svg class="ev-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"' +
+                   ' fill="none" stroke="currentColor" stroke-width="2.5"' +
+                   ' stroke-linecap="round" stroke-linejoin="round">' +
+                '<path d="M9 6l6 6-6 6"/>' +
+              '</svg>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ev-detail' + (isOpen ? ' open' : '') + '" role="region">' +
+            detailHtml + icsHtml +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+  }
+
+  function evToggle(i) { evOpenIdx = (evOpenIdx === i) ? -1 : i; evRender(); }
+
+  function evResetView() {
+    evEvents = []; evOpenIdx = -1;
+    document.getElementById('ev-eventSection').style.display = 'none';
+    document.getElementById('ev-uploadSection').style.display = 'block';
+    document.getElementById('ev-fileInput').value = '';
+    evSetStatus('');
+  }
+
+  function evSetStatus(msg, isErr) {
+    var el = document.getElementById('ev-statusMsg');
+    el.className = msg ? ('ev-status' + (isErr ? ' err' : '')) : '';
+    el.textContent = msg || '';
+  }
+
+  function evDownloadTemplate(e) {
+    e.stopPropagation();
+    var wb = XLSX.utils.book_new();
+    var data = [
+      ['Month','Day','Title','Time','Category','Details','ICS Link'],
+      ['MAY','18','Early Release All Levels','All Day','Early Release Day - All levels','11:30am High Schools\n12:30pm Elementary Schools\n1:30pm Middle Schools',''],
+      ['MAY','20','Last Day of School','All Day','First and Last Days of School','Last Day of School for all students.',''],
+      ['JUN','9','Summer Term Begins','All Day','Term Dates','Summer Term 2026 begins. Log in to CTLS Learn to access courses.',''],
+      ['AUG','4','Fall Registration Opens','9:00am \u2013 4:00pm','Registration','Registration is open for the Fall 2026 term.',''],
+    ];
+    var ws = XLSX.utils.aoa_to_sheet(data);
+    ws['!cols'] = [{wch:8},{wch:6},{wch:34},{wch:22},{wch:30},{wch:44},{wch:44}];
+    XLSX.utils.book_append_sheet(wb, ws, 'Events');
+    XLSX.writeFile(wb, 'CVA_Events_Template.xlsx');
+  }
+
+  /* expose to inline onclick handlers */
+  window.evToggle      = evToggle;
+  window.evResetView   = evResetView;
+  window.evLoadFile    = evLoadFile;
+  window.evDragOver    = evDragOver;
+  window.evDragLeave   = evDragLeave;
+  window.evDrop        = evDrop;
+  window.evDownloadTemplate = evDownloadTemplate;
+})();
+
+
+/* ════════════════════════════════════════
+   QUICK REFERENCE SEARCH
+   ════════════════════════════════════════ */
+(function() {
+  var inputEl  = document.getElementById('cva-input');
+  var clearBtn = document.getElementById('cva-clear');
+  var resultsEl = document.getElementById('search-results');
+
+  document.querySelectorAll('details.quick-ref').forEach(function(d) {
+    d.style.display = 'block';
+    d.removeAttribute('hidden');
+    d.removeAttribute('open');
+  });
+
+  var sectionIcons = {
+    'Grading and Feedback': 'ti-checklist',
+    'Communication and Responsiveness': 'ti-mail',
+    'Rapport and Relationships': 'ti-heart',
+    'Proactive Intervention and Student Support': 'ti-alert-circle',
+    'Professionalism and Collaboration': 'ti-users'
+  };
+
+  var cards = Array.from(document.querySelectorAll('.info-card[id]')).map(function(el) {
+    var title   = (el.querySelector('h3') || {}).textContent || '';
+    var label   = (el.querySelector('.info-card-label') || {}).textContent || '';
+    var tags    = (el.querySelector('.info-card-tags') || {}).textContent || '';
+    var accordion = el.closest('details.quick-ref');
+    var sumEl   = accordion ? accordion.querySelector('summary') : null;
+    var section = '';
+    if (sumEl) {
+      var clone = sumEl.cloneNode(true);
+      var plusEl = clone.querySelector('.quick-plus');
+      if (plusEl) plusEl.remove();
+      section = clone.textContent.trim();
+    }
+    return { id: el.id, title: title.trim(), label: label.trim(), tags: tags.trim(), section: section };
+  });
+
+  var highlightTimer = null;
+
+  function iconFor(s) { return sectionIcons[s] || 'ti-file'; }
+  function getInputText() { return (inputEl.textContent || inputEl.innerText || '').trim(); }
+  function clearResults() { resultsEl.innerHTML = ''; resultsEl.classList.remove('visible'); }
+
+  function scrollToCard(id) {
+    var card = document.getElementById(id);
+    if (!card) return;
+    var accordion = card.closest('details.quick-ref');
+    if (accordion) accordion.open = true;
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.classList.add('card-highlight');
+    clearTimeout(highlightTimer);
+    highlightTimer = setTimeout(function() { card.classList.remove('card-highlight'); }, 5000);
+  }
+
+  function renderResults(matches, term) {
+    if (!term) { clearResults(); clearBtn.style.display = 'none'; return; }
+    clearBtn.style.display = 'inline-block';
+    resultsEl.classList.add('visible');
+    if (!matches.length) {
+      resultsEl.innerHTML = '<div class="results-list"><div class="results-empty">No results found for &ldquo;' + term + '&rdquo;</div></div>';
+      return;
+    }
+    var rows = matches.map(function(c) {
+      return '<div class="result-item" data-id="' + c.id + '">' +
+        '<div class="result-icon"><i class="ti ' + iconFor(c.section) + '" aria-hidden="true"></i></div>' +
+        '<div><div class="result-title">' + c.title + '</div>' +
+        '<div class="result-section">' + c.section + '</div></div>' +
+        '</div>';
+    }).join('');
+    resultsEl.innerHTML = '<div class="results-list">' + rows +
+      '<div class="results-hint">Click a result to jump to that card</div></div>';
+    resultsEl.querySelectorAll('.result-item').forEach(function(item) {
+      item.addEventListener('click', function() { scrollToCard(item.dataset.id); });
+    });
+  }
+
+  function doSearch() {
+    var term = getInputText().toLowerCase();
+    if (!term) { clearResults(); clearBtn.style.display = 'none'; return; }
+    var matches = cards.filter(function(c) {
+      return (c.title + ' ' + c.label + ' ' + c.section + ' ' + c.tags).toLowerCase().includes(term);
+    });
+    renderResults(matches, term);
+  }
+
+  inputEl.addEventListener('input', doSearch);
+  inputEl.addEventListener('keydown', function(e) { if (e.keyCode === 13) e.preventDefault(); });
+  inputEl.addEventListener('paste', function(e) {
+    e.preventDefault();
+    var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+    document.execCommand('insertText', false, text);
+  });
+  clearBtn.addEventListener('click', function() {
+    inputEl.textContent = ''; clearResults();
+    clearBtn.style.display = 'none'; inputEl.focus();
+  });
+  clearBtn.addEventListener('keydown', function(e) {
+    if (e.keyCode === 13 || e.keyCode === 32) {
+      e.preventDefault(); inputEl.textContent = ''; clearResults();
+      clearBtn.style.display = 'none'; inputEl.focus();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
