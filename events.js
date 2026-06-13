@@ -1,3 +1,4 @@
+window.evTriggerUpload = function(){ document.getElementById('ev-fileInput').click(); };
 (function(){
   var EV_MONTHS=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
   var evEvents=[],evOpenIdx=-1;
