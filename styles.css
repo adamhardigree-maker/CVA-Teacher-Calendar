@@ -119,3 +119,5 @@
     .page-wrap .ev-view-all-wrap{text-align:center;padding:14px 0 4px;}
     .page-wrap .ev-view-all-btn{background:none;border:1px solid #bb0000;color:#bb0000!important;font-family:'Montserrat',Arial,sans-serif;font-size:12px;font-weight:600;padding:7px 20px;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:background .15s,color .15s;}
     .page-wrap .ev-view-all-btn:hover{background:#bb0000;color:#fff!important;}
+    .page-wrap .ev-title-heading{font-family:'Oswald',Arial,sans-serif;font-size:clamp(28px,4vw,34px);line-height:1.15;color:#000!important;text-transform:uppercase;font-weight:900;margin-bottom:12px;}
+    .page-wrap .ev-divider{border:none;border-bottom:3px solid #bb0000;margin-bottom:0;}

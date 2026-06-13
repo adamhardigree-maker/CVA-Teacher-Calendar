@@ -9,7 +9,6 @@ window.evTriggerUpload=function(){document.getElementById('ev-fileInput').click(
   function evHide(id){document.getElementById(id).classList.add("ev-hidden");}
 
   function evInit(){
-    evHide("ev-uploadSection");
     evHide("ev-statusMsg");
     evSetStatus("Loading events...", false);
     evShow("ev-statusMsg");
@@ -65,7 +64,6 @@ window.evTriggerUpload=function(){document.getElementById('ev-fileInput').click(
     evSetStatus("","");
     evHide("ev-statusMsg");
     evShow("ev-eventSection");
-    document.getElementById("ev-countLabel").textContent = evEvents.length+" event"+(evEvents.length!==1?"s":"")+" loaded";
     evRender();
   }
 
