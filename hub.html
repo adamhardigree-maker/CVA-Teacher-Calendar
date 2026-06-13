@@ -15,6 +15,53 @@
     <p>Quick answers and resources for CVA teaching expectations.</p>
   </div>
 
+  <!-- UPCOMING EVENTS -->
+  <div class="events-card" role="region" aria-label="Upcoming Events">
+    <div class="ev-header">
+      <h2>Upcoming Events</h2>
+      <div class="ev-header-links">
+        <a href="#">List View</a>
+        <a href="#">View Calendar</a>
+      </div>
+    </div>
+    <div id="ev-uploadSection">
+      <div class="ev-upload-zone" id="ev-dropZone" role="button" tabindex="0"
+           onclick="evTriggerUpload()"
+           ondragover="evDragOver(event)"
+           ondragleave="evDragLeave(event)"
+           ondrop="evDrop(event)">
+        <input type="file" id="ev-fileInput" accept=".xlsx,.xls" onchange="evLoadFile(this.files[0])">
+        <strong>Upload your Events Spreadsheet</strong>
+        <p>Click to browse or drag and drop an Excel file (.xlsx)</p>
+        <button class="ev-template-btn" onclick="evDownloadTemplate(event)">Download blank template</button>
+      </div>
+      <div class="ev-col-ref">
+        <b>Required column headers - row 1 of your spreadsheet</b>
+        <table><tbody>
+          <tr><td>Month</td><td>3-letter abbreviation, e.g. JUN, AUG, SEP</td></tr>
+          <tr><td>Day</td><td>Number, e.g. 15</td></tr>
+          <tr><td>Title</td><td>Event name</td></tr>
+          <tr><td>Time</td><td>All Day or a range like 9:00am - 3:00pm</td></tr>
+          <tr><td>Category</td><td>Optional label shown below the title</td></tr>
+          <tr><td>Details</td><td>Optional description shown when expanded</td></tr>
+          <tr><td>ICS Link</td><td>Optional .ics URL for Add to my calendar</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div id="ev-eventSection">
+      <div class="ev-count-bar">
+        <button class="ev-reload-btn" onclick="evResetView()">Upload new file</button>
+        <span id="ev-countLabel"></span>
+      </div>
+      <div id="ev-eventList" role="list"></div>
+      <div class="ev-footer-links">
+        <a href="#" id="ev-viewAllLink">View All Events</a>
+        <a href="#" id="ev-viewCalLink">View Calendar</a>
+      </div>
+    </div>
+    <div id="ev-statusMsg" role="alert" aria-live="polite"></div>
+  </div>
+
 <!-- OVERVIEW -->
   <div class="overview-card">
     <p class="overview-label">Overview</p>
@@ -116,51 +163,4 @@
 </div>
 <script src="events.js"></script>
 </body>
-</html
-  <div class="events-card" role="region" aria-label="Upcoming Events">
-    <div class="ev-header">
-      <h2>Upcoming Events</h2>
-      <div class="ev-header-links">
-        <a href="#">List View</a>
-        <a href="#">View Calendar</a>
-      </div>
-    </div>
-    <div id="ev-uploadSection">
-      <div class="ev-upload-zone" id="ev-dropZone" role="button" tabindex="0"
-           onclick="evTriggerUpload()"
-           ondragover="evDragOver(event)"
-           ondragleave="evDragLeave(event)"
-           ondrop="evDrop(event)">
-        <input type="file" id="ev-fileInput" accept=".xlsx,.xls" onchange="evLoadFile(this.files[0])">
-        <strong>Upload your Events Spreadsheet</strong>
-        <p>Click to browse or drag and drop an Excel file (.xlsx)</p>
-        <button class="ev-template-btn" onclick="evDownloadTemplate(event)">Download blank template</button>
-      </div>
-      <div class="ev-col-ref">
-        <b>Required column headers - row 1 of your spreadsheet</b>
-        <table><tbody>
-          <tr><td>Month</td><td>3-letter abbreviation, e.g. JUN, AUG, SEP</td></tr>
-          <tr><td>Day</td><td>Number, e.g. 15</td></tr>
-          <tr><td>Title</td><td>Event name</td></tr>
-          <tr><td>Time</td><td>All Day or a range like 9:00am - 3:00pm</td></tr>
-          <tr><td>Category</td><td>Optional label shown below the title</td></tr>
-          <tr><td>Details</td><td>Optional description shown when expanded</td></tr>
-          <tr><td>ICS Link</td><td>Optional .ics URL for Add to my calendar</td></tr>
-        </tbody></table>
-      </div>
-    </div>
-    <div id="ev-eventSection">
-      <div class="ev-count-bar">
-        <button class="ev-reload-btn" onclick="evResetView()">Upload new file</button>
-        <span id="ev-countLabel"></span>
-      </div>
-      <div id="ev-eventList" role="list"></div>
-      <div class="ev-footer-links">
-        <a href="#" id="ev-viewAllLink">View All Events</a>
-        <a href="#" id="ev-viewCalLink">View Calendar</a>
-      </div>
-    </div>
-    <div id="ev-statusMsg" role="alert" aria-live="polite"></div>
-  </div>
-
->
+</html>
