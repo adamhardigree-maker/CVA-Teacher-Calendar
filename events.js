@@ -83,20 +83,51 @@ window.evTriggerUpload=function(){document.getElementById('ev-fileInput').click(
 
   function evEsc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 
+  var EV_LIMIT = 5;
+  var evShowAll = false;
+
+  function evGetToday(){
+    var d = new Date();
+    return EV_MONTHS.indexOf(['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][d.getMonth()]) * 31 + d.getDate();
+  }
+
   function evRender(){
-    var list=document.getElementById("ev-eventList");
+    var list = document.getElementById("ev-eventList");
     if(!evEvents.length){list.innerHTML="<div class=\"ev-status\">No events found.</div>";return;}
-    list.innerHTML=evEvents.map(function(ev,i){
-      var open=evOpenIdx===i;
-      var dh=ev.detail?"<p>"+ev.detail.replace(/\n/g,"<br>")+"</p>":"<p><em>No additional details.</em></p>";
-      var ih=ev.ics?"<a class=\"ev-cal-link\" href=\""+evEsc(ev.ics)+"\" target=\"_blank\" rel=\"noopener\">Add to my calendar</a>":"";
+
+    // Filter to upcoming events only
+    var today = evGetToday();
+    var upcoming = evEvents.filter(function(ev){
+      return (EV_MONTHS.indexOf(ev.month)*31 + ev.day) >= today;
+    });
+
+    if(!upcoming.length){list.innerHTML="<div class=\"ev-status\">No upcoming events.</div>";return;}
+
+    // Limit to 5 unless showing all
+    var visible = evShowAll ? upcoming : upcoming.slice(0, EV_LIMIT);
+    var hasMore = !evShowAll && upcoming.length > EV_LIMIT;
+
+    list.innerHTML = visible.map(function(ev, i){
+      var open = evOpenIdx === i;
+      var dh = ev.detail ? "<p>"+ev.detail.replace(/\n/g,"<br>")+"</p>" : "<p><em>No additional details.</em></p>";
+      var ih = ev.ics ? "<a class=\"ev-cal-link\" href=\""+evEsc(ev.ics)+"\" target=\"_blank\" rel=\"noopener\">Add to my calendar</a>" : "";
       return "<div role=\"listitem\"><div class=\"ev-row\" onclick=\"evToggle("+i+")\" role=\"button\" tabindex=\"0\" aria-expanded=\""+open+"\">"+
         "<div class=\"ev-badge\" aria-hidden=\"true\"><span class=\"ev-month\">"+evEsc(ev.month)+"</span><span class=\"ev-day\">"+ev.day+"</span></div>"+
         "<div class=\"ev-body\"><div class=\"ev-title\">"+evEsc(ev.title)+"</div><div class=\"ev-time\">"+evEsc(ev.time)+"</div>"+(ev.cat?"<div class=\"ev-cat\">"+evEsc(ev.cat)+"</div>":"")+"</div>"+
         "<div class=\"ev-arrow"+(open?" open":"")+"\" aria-hidden=\"true\"><svg class=\"ev-chevron\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 6l6 6-6 6\"/></svg></div></div>"+
         "<div class=\"ev-detail"+(open?"":" ev-hidden")+"\" role=\"region\">"+dh+ih+"</div></div>";
     }).join("");
+
+    // View All / Show Less button
+    if(hasMore){
+      list.innerHTML += "<div class=\"ev-view-all-wrap\"><button class=\"ev-view-all-btn\" onclick=\"evToggleAll()\">View All "+upcoming.length+" Events</button></div>";
+    } else if(evShowAll && upcoming.length > EV_LIMIT){
+      list.innerHTML += "<div class=\"ev-view-all-wrap\"><button class=\"ev-view-all-btn\" onclick=\"evToggleAll()\">Show Less</button></div>";
+    }
   }
+
+  function evToggleAll(){ evShowAll = !evShowAll; evOpenIdx = -1; evRender(); }
+  window.evToggleAll = evToggleAll;
 
   function evToggle(i){evOpenIdx=(evOpenIdx===i)?-1:i;evRender();}
 

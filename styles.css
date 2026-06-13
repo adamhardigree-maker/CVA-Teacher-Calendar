@@ -116,3 +116,6 @@
     .page-wrap .cva-footer{border-top:1px solid #d9dde3;margin-top:14px;padding-top:14px;text-align:center;}
     .page-wrap .cva-footer p{font-family:'Oswald',Arial,sans-serif;font-size:22px;color:#63666a;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:0;}
     @media(max-width:640px){.page-wrap .hero-card,.page-wrap .overview-card,.page-wrap .quick-guide-card{padding:20px 18px;}.page-wrap .quick-guide-card h2,.page-wrap .overview-card h2{font-size:26px;}}
+    .page-wrap .ev-view-all-wrap{text-align:center;padding:14px 0 4px;}
+    .page-wrap .ev-view-all-btn{background:none;border:1px solid #bb0000;color:#bb0000!important;font-family:'Montserrat',Arial,sans-serif;font-size:12px;font-weight:600;padding:7px 20px;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:background .15s,color .15s;}
+    .page-wrap .ev-view-all-btn:hover{background:#bb0000;color:#fff!important;}
